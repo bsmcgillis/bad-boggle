@@ -1,7 +1,21 @@
-$(function() {
-    $('#mazeForm').on('submit', function(event) {
-        var answer = 'Word: "", Score: '; 
-        $('#mazeSolution').html(answer);
-        event.preventDefault();
-    });
+jQuery(function($){
+	BadBoggle = {
+
+		init: function(){
+			BadBoggle.registerEventHandlers();
+		},
+
+		registerEventHandlers: function(){
+			$('#mazeForm').on( 'submit', BadBoggle.processGrid );
+        },
+        
+        processGrid( event ){
+            event.preventDefault();
+            var boggleGrid = $('#mazeEntry').val();
+
+            console.log('grid', boggleGrid); //@DEBUG
+        }
+	};
+	
+    BadBoggle.init(); 
 });
