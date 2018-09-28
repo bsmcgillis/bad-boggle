@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <title>Bad Boggle</title>
+    <link rel="stylesheet" href="style.css"/>
+
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+    <script src="script.js"> </script>
+
+</head>
+
+<body>
+    <h2>"Bad Boggle" Instructions</h2>
+    <p>
+        Given a rectangular grid of letters, your assignment is to navigate through the grid to find the highest-scoring string of letters ("word") using the following scoring rules:<br/>
+        Vowels (a, e, i, o, u) <strong>increase</strong> your score by 3 points.<br/>
+        Consonants <strong>decrease</strong> your score by 2 points.<br/>
+        Since y only sometimes a vowel, it <strong>decreases</strong> your score by 10 points, because special cases are complicated.<br/>
+        You are only allowed to connect adjacent letters along the cardinal directions (moving diagonally is not allowed). Note that a grid may have more than one solution. This does not need to be a valid word in any language, simply a high-scoring string of letters.
+    </p>
+    <p>
+        Please write a Javascript program that allows the user to input a grid into a textarea, and solves that grid for the highest-scoring "word." Your program should output the "word" that it found, and its score.
+
+        Feel free to use any tools (books, internet, etc.) that you normally use in your day-to-day programming.
+        <br/><br/>
+        Please use this page as a starting point for your application. If time permits, feel free to update the style and structure of this page to improve the User Interface and Experience.
+        <br/><br/>
+        As you are analyzing and writing this program, take note of any questions that you have about the requirements, and any assumptions that you were forced to make.
+        We left some requirements intentionally vague, and would like you to put yourself in the position of a developer receiving these requirements from a customer.
+        What clarifying questions would you ask them before you started, or while demonstrating the software to them? Don't worry about making the wrong assumptions - the important thing is that you came up with questions to ask, not that you "read our minds."
+        Do you have any enhancements that you want to suggest, or pre-emptively implement? If you had days instead of hours to implement this, how would you improve your solution?
+        <br/><br/>
+        Please use a local git repository, or your personal GitHub account to commit your changes as frequently as possible, with appropriate commit messages. This exercise has a time limit of 2 hours, starting from the time when you create your repository. It is not necessary to complete this exercise within the time limit, but it is necessary to show your work! As soon as the time limit is up, please send us a link to your public repository, or zip up your working directory (complete with .git folder) and email it back to us, along with your responses to the questions above.
+        <br/><br/>
+    </p>
+
+        <pre>
+Example Input:
+urbx
+oygj
+fuya
+
+Example Output:
+Word: "uofu", Score: 7</pre>
+
+
+    <form id="mazeForm">
+        <label for="mazeEntry">Please input your grid and click "Process"</label><br/>
+        <textarea name="mazeEntry" id="mazeEntry" cols="30" rows="10"></textarea>
+        <br/>
+        <input id="mazeEntrySubmit" type="submit" value="Process">
+        <div id="mazeSolution"></div>
+    </form>
+
+</body>
+
+</html>
