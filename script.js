@@ -16,14 +16,21 @@ jQuery(function($){
         
         processGrid( event ){
             event.preventDefault();
-            var boggleGrid = $('#mazeEntry').val();
-            gridArray = BadBoggle.convertGridToArray( boggleGrid );
 
-            BadBoggle.findPaths(gridArray);
+            // Reset values;
+            gridArray = [];
+            gridPaths = [];
+            pathValues = [];
+            
+            var boggleGrid = $('#mazeEntry').val();
+
+            BadBoggle.convertGridToArray( boggleGrid );
+            BadBoggle.findPaths();
             BadBoggle.findPathValues();
+            BadBoggle.displayBestWord();
         },
 
-        convertGridToArray( grid ){
+        convertGridToArray(grid){
             // Convert grid into an array with each line as an index
             var lineArray = grid.split(/\r?\n/);
 
@@ -32,11 +39,11 @@ jQuery(function($){
                 lineArray[index] = value.split('');
             });
 
-            return lineArray;
+            gridArray = lineArray;
         },
 
-        findPaths( grid ){
-            grid.forEach(function(yValue, yCoord){
+        findPaths(){
+            gridArray.forEach(function(yValue, yCoord){
                 yValue.forEach(function(xValue, xCoord){
                     BadBoggle.searchPath( 
                         [[yCoord, xCoord]],
@@ -45,7 +52,50 @@ jQuery(function($){
                     );
                 });
             });
-        }, 
+        },
+
+        findPathValues(){
+            gridPaths.forEach(function(path){
+                var pathCharacters = path.split('');
+                var highPoint = BadBoggle.charValue( pathCharacters[0] );
+                var currValue = 0;
+                var bestWord = '';
+
+                // Find the high point
+                pathCharacters.forEach(function(character){
+                    currValue += BadBoggle.charValue( character );
+                    if( currValue > highPoint ){
+                        highPoint = currValue;
+                    }
+                });
+
+                // Find the point at which high point was reached
+                currValue = 0;
+                pathCharacters.forEach(function(character){
+                    bestWord += character;
+                    currValue += BadBoggle.charValue( character );
+                    if( currValue === highPoint ){
+                        pathValues.push({word: bestWord, value: highPoint});
+                    }
+                });
+            });
+        },
+
+        displayBestWord(){
+            var bestValue = pathValues[0].value;
+            var bestWord = '';
+
+            pathValues.forEach(function(pathValue){
+                if( pathValue.value > bestValue ){
+                    bestValue = pathValue.value;
+                    bestWord = pathValue.word;
+                }
+            });
+
+            $('#mazeSolution').html(
+                'Best word is ' + bestWord + ' at ' + bestValue + ' points'
+            );
+        },
 
         searchPath( pastPositions, currY, currX ){
             var wentSomewhere = false;
@@ -123,33 +173,6 @@ jQuery(function($){
             }
 
             return true;
-        },
-
-        findPathValues(){
-            gridPaths.forEach(function(path){
-                var pathCharacters = path.split('');
-                var highPoint = BadBoggle.charValue( pathCharacters[0] );
-                var currValue = 0;
-                var bestString = '';
-
-                // Find the high point
-                pathCharacters.forEach(function(character){
-                    currValue += BadBoggle.charValue( character );
-                    if( currValue > highPoint ){
-                        highPoint = currValue;
-                    }
-                });
-
-                // Find the point at which high point was reached
-                currValue = 0;
-                pathCharacters.forEach(function(character){
-                    bestString += character;
-                    currValue += BadBoggle.charValue( character );
-                    if( currValue === highPoint ){
-                        pathValues.push({string: bestString, value: highPoint});
-                    }
-                });
-            });
         },
 
         charValue( character ){
