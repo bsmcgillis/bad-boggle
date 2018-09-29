@@ -18,11 +18,9 @@ jQuery(function($){
             var boggleGrid = $('#mazeEntry').val();
             gridArray = BadBoggle.convertGridToArray( boggleGrid );
 
-            // console.log('gridArray', gridArray[2][3]); //@DEBUG
-
-
-
             BadBoggle.calculatePathValues(gridArray);
+
+            console.log('paths', gridPaths); //@DEBUG
         },
 
         convertGridToArray( grid ){
@@ -39,29 +37,26 @@ jQuery(function($){
 
         calculatePathValues( grid ){
             
-            var paths = [];
             grid.forEach(function(yValue, yCoord){
                 console.log('yValue', yValue); //@DEBUG
                 yValue.forEach(function(xValue, xCoord){
-                    
+                    BadBoggle.searchPath( 
+                        [yCoord, xCoord],
+                        yCoord,
+                        xCoord
+                    );
                 });
             });
-
-
-
-            
         }, 
 
-        searchPath( stringSoFar, currY, currX, lastY, lastX ){
+        searchPath( pastPositions, currY, currX ){
             var wentSomewhere = false;
             
             //Try to go up
-            if( BadBoggle.validPath(currY - 1, currX, lastY, lastX) ){
+            if( BadBoggle.validPath(pastPositions, currY - 1, currX) ){
                 searchPath( 
-                    stringSoFar + gridArray[currY][currX],
+                    pastPositions.push(array(currY -1, currX)),
                     currY - 1,
-                    currX,
-                    currY,
                     currX
                 );
 
@@ -69,25 +64,21 @@ jQuery(function($){
             }
 
             //Try to go right    
-            if( BadBoggle.validPath(currY, currX + 1, lastY, lastX) ){
+            if( BadBoggle.validPath(pastPositions, currY, currX + 1) ){
                 searchPath( 
-                    stringSoFar + gridArray[currY][currX],
+                    pastPositions.push(array(currY, currX + 1)),
                     currY,
-                    currX + 1,
-                    currY,
-                    currX
+                    currX + 1
                 );
 
                 wentSomewhere = true;
             }
 
             //Try to go down    
-            if( BadBoggle.validPath(currY + 1, currX, lastY, lastX) ){
+            if( BadBoggle.validPath(pastPositions, currY + 1, currX) ){
                 searchPath( 
-                    stringSoFar + gridArray[currY][currX],
+                    pastPositions.push(array(currY + 1, currX)),
                     currY + 1,
-                    currX,
-                    currY,
                     currX
                 );
 
@@ -95,13 +86,11 @@ jQuery(function($){
             }
 
             //Try to go left    
-            if( BadBoggle.validPath(currY, currX - 1, lastY, lastX) ){
+            if( BadBoggle.validPath(pastPositions, currY, currX - 1) ){
                 searchPath( 
-                    stringSoFar + gridArray[currY][currX],
+                    pastPositions.push(array(currY, currX - 1)),
                     currY,
-                    currX - 1,
-                    currY,
-                    currX
+                    currX - 1
                 );
 
                 wentSomewhere = true;
@@ -113,14 +102,36 @@ jQuery(function($){
             }
         },
 
-        validPath( newY, newX, lastY, lastX ){
-            // If this index doesn't exist, return false
+        validPath( pastPositions, newY, newX ){
+            // If new position doesn't exist, return false
             if( undefined === gridArray[newY][newX] ) return false;
 
-            // If this is the previous position, return false
-            if( currY === lastY && currX === lastX ) return false;
+            // If new position doesn't contain a vowel, return false
+            if( false === BadBoggle.isAVowel( gridArray[newY][newX] ) ) return false;
+
+            var alreadyVisited = false;
+            // If new position has been visited before, return false
+            pastPositions.forEach(function(position){
+                if( position[0] === newY && position[1] === newX ){
+                    alreadyVisited = true;
+                }
+            });
+
+            if( alreadyVisited === true ){
+                return false;
+            }
 
             return true;
+        },
+
+        isAVowel( character ){
+            var vowels = ['a', 'e', 'i', 'o', 'u'];
+
+            vowels.forEach(function( vowel ){
+                if( character === vowel ) return true;
+            });
+
+            return false;
         }
     };
  
