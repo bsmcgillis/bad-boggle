@@ -46,11 +46,7 @@ jQuery(function($){
         findPaths(){
             gridArray.forEach(function(yValue, yCoord){
                 yValue.forEach(function(xValue, xCoord){
-                    BadBoggle.searchPath( 
-                        [[yCoord, xCoord]],
-                        yCoord,
-                        xCoord
-                    );
+                    BadBoggle.searchPath([[yCoord, xCoord]], yCoord, xCoord);
                 });
             });
         },
